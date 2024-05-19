@@ -1,11 +1,26 @@
 import { createBoard, playMove } from "./connect4.js";
 
+// listener for copy link button
+// document.querySelector('join').addEventListener('click', () => {
+//     const linkElement = document.querySelector('.join');
+//     const linkToCopy = linkElement.dataset.link;
+
+//     navigator.clipboard.writeText(linkToCopy).then(function() {
+//         alert('Link copied to clipboard!');
+//     }, function(err) {
+//         console.error('Could not copy text: ', err);
+//     });
+// });
+
 function initGame(websocket) {
     websocket.addEventListener("open", () => {
-       const event = {
-        'type': 'init'
-       }
-       websocket.send(JSON.stringify(event));
+        const params = new URLSearchParams(window.location.search);
+        // second player is joining game
+        let event = { type: 'init' };
+        if (params.has('join')) {   
+            event.join = params.get('join');
+        }
+        websocket.send(JSON.stringify(event));
     });
 }
 
@@ -34,7 +49,10 @@ function receiveMoves(board, websocket) {
         const event = JSON.parse(data);
         switch (event.type) {
         case "init":
-            document.querySelector(".join").href = ("?join=") + event.join
+            // const currentURL = window.location.href;
+            // const linkElement = document.querySelector(".join");
+            // linkElement.dataset.link = window.location.href + "/?join=" + event.join;
+            document.querySelector('.join').href = "?join=" + event.join;
             break;
         case "play":
             // Update the UI with the move.
