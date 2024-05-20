@@ -9,6 +9,9 @@ from connect4 import PLAYER1, PLAYER2, Connect4
 # access token
 import secrets
 
+import os
+import signal
+
 JOIN = {}
 
 async def start(websocket):
