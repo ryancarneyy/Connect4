@@ -1,16 +1,14 @@
 import { createBoard, playMove } from "./connect4.js";
 
-// listener for copy link button
-// document.querySelector('join').addEventListener('click', () => {
-//     const linkElement = document.querySelector('.join');
-//     const linkToCopy = linkElement.dataset.link;
-
-//     navigator.clipboard.writeText(linkToCopy).then(function() {
-//         alert('Link copied to clipboard!');
-//     }, function(err) {
-//         console.error('Could not copy text: ', err);
-//     });
-// });
+function getWebSocketServer() {
+  if (window.location.host === "ryancarneyy.github.io") {
+    return "wss://connect-four-websocket-11212664fb48.herokuapp.com/";
+  } else if (window.location.host === "localhost:8000") {
+    return "ws://localhost:8001/";
+  } else {
+    throw new Error(`Unsupported host: ${window.location.host}`);
+  }
+}
 
 function initGame(websocket) {
     websocket.addEventListener("open", () => {
@@ -78,7 +76,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const board = document.querySelector(".board");
     createBoard(board);
     // Open the WebSocket connection and register event handlers.
-    const websocket = new WebSocket("ws://localhost:8001/");
+    const websocket = new WebSocket(getWebSocketServer());
     initGame(websocket)
     receiveMoves(board, websocket);
     sendMoves(board, websocket);
